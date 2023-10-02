@@ -1,8 +1,10 @@
-app/.gradle
+.gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+database73.mv.db
+database73.trace.db
 
 ### IntelliJ IDEA ###
 .idea
@@ -39,6 +41,10 @@ bin/
 /dist/
 /nbdist/
 /.nb-gradle/
+
+### Frontend-files###
+node
+.frontend/
 
 ### VS Code ###
 .vscode/
