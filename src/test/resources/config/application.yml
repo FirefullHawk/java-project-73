@@ -1,17 +1,12 @@
-base.url: "/api"
+base-url: ""
 
 spring:
   application:
     name: taskManager
 
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: validate
-
   liquibase:
     enabled: true
-    change-log: classpath:db/changelog/changelog-master.xml
+    change-log: classpath:db/changelog/db.changelog-master.yaml
 
   mvc:
     hiddenmethod:

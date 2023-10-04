@@ -1,8 +1,12 @@
 package hexlet.code.service;
 
-import hexlet.code.dto.user.RequestDTO;
+import hexlet.code.dto.UserDTO;
 import hexlet.code.model.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import hexlet.code.repository.UserRepository;
+import hexlet.code.service.interfaces.UserServiceInterface;
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,22 +14,57 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
-public interface UserService {
+@AllArgsConstructor
+public class UserService implements UserServiceInterface {
+    private final UserRepository userRepository;
 
-    @Transactional
-    User createUser(RequestDTO dto);
+    private final PasswordEncoder passwordEncoder;
 
-    List<User> getAllUsers();
+    @Override
+    public User getUserById(long id) {
+        return userRepository.findById(id)
+                .orElseThrow();
+    }
 
-    User getUserById(Long id);
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 
-    User getUserReferenceById(long id);
+    @Override
+    public User createUser(UserDTO userDto) {
+        final User user = new User();
+        user.setEmail(userDto.getEmail());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        userRepository.save(user);
 
-    User getUserByEmail(String email);
+        return user;
+    }
 
-    @Transactional
-    User updateUser(long id, RequestDTO dto, UserDetails authDetails);
+    @Override
+    public User updateUser(final long id, final UserDTO userDto) {
+        final User userToUpdate = userRepository.findById(id).get();
+        userToUpdate.setEmail(userDto.getEmail());
+        userToUpdate.setFirstName(userDto.getFirstName());
+        userToUpdate.setLastName(userDto.getLastName());
+        userToUpdate.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        return userRepository.save(userToUpdate);
+    }
 
-    @Transactional
-    void deleteUser(long id, UserDetails authDetails);
+    @Override
+    public void deleteUser(long id) {
+        final User userToDelete = userRepository.findById(id).get();
+        userRepository.delete(userToDelete);
+    }
+    @Override
+    public String getCurrentUserId() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    @Override
+    public User getCurrentUser() {
+        return userRepository.findByEmail(getCurrentUserId()).get();
+    }
 }

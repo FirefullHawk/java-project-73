@@ -1,18 +1,15 @@
 package hexlet.code.controller.api;
 
-import hexlet.code.dto.user.RequestDTO;
-import hexlet.code.dto.user.ResponseDTO;
+import hexlet.code.dto.UserDTO;
 import hexlet.code.model.User;
-import hexlet.code.service.UserService;
+import hexlet.code.service.interfaces.UserServiceInterface;
+import hexlet.code.utils.NamedRoutes;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,22 +17,27 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
+import lombok.AllArgsConstructor;
+import jakarta.validation.Valid;
+
+import static org.springframework.http.HttpStatus.CREATED;
+
 @AllArgsConstructor
-@RequestMapping("${base.url}" + "/users")
+@RestController
+@RequestMapping("${base-url}" + NamedRoutes.USERS_PATH)
 public class UserController {
 
-    private final UserService userService;
+    private final UserServiceInterface userService;
 
-    private static final String OWNER =
-            "@userRepository.findUserById(#id).orElse().getEmail() == authentication.getName()";
+    private static final String OWNER = """
+            @userRepository.findById(#id).get().getEmail() == authentication.getName()
+        """;
 
     @Operation(summary = "Create new user")
     @ApiResponses(value = {
@@ -44,22 +46,22 @@ public class UserController {
             @ApiResponse(responseCode = "422", description = "User data is incorrect"),
     })
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseDTO createUser(@RequestBody @Valid RequestDTO dto,
-                                      BindingResult bindingResult) {
-        User createdUser = userService.createUser(dto);
-        return toUserResponseDTO(createdUser);
+    @ResponseStatus(CREATED)
+    public User createUser(@Valid @RequestBody UserDTO userDto) {
+        return userService.createUser(userDto);
     }
 
     @Operation(summary = "Get list of all users")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "List of all users"),
+            @ApiResponse(responseCode = "200",
+                    content = @Content(schema = @Schema(implementation = User.class)),
+                    description = "List of all users"),
     })
     @GetMapping
-    public List<ResponseDTO> findAllUsers() {
+    public List<UserDTO> findAllUsers() {
         List<User> existedUsers = userService.getAllUsers();
         return existedUsers.stream()
-                .map(this::toUserResponseDTO)
+                .map(this::toUserDTO)
                 .collect(Collectors.toList());
     }
 
@@ -69,9 +71,9 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User with that id not found")
     })
     @GetMapping(path = "/{id}")
-    public ResponseDTO findUserById(@PathVariable(name = "id") long id) {
+    public UserDTO findUserById(@PathVariable(name = "id") long id) {
         User existedUser = userService.getUserById(id);
-        return toUserResponseDTO(existedUser);
+        return toUserDTO(existedUser);
     }
 
     @Operation(summary = "Update user by his id")
@@ -83,11 +85,10 @@ public class UserController {
             @ApiResponse(responseCode = "422", description = "User data is incorrect")
     })
     @PutMapping(path = "/{id}")
-    public ResponseDTO updateUser(@RequestBody @Valid RequestDTO dto,
-                                      @PathVariable(name = "id") long id,
-                                      @AuthenticationPrincipal UserDetails authDetails) {
-        User updatedUser = userService.updateUser(id, dto, authDetails);
-        return toUserResponseDTO(updatedUser);
+    public UserDTO updateUser(@RequestBody @Valid UserDTO dto,
+                                      @PathVariable(name = "id") long id) {
+        User updatedUser = userService.updateUser(id, dto);
+        return toUserDTO(updatedUser);
     }
 
     @PreAuthorize(OWNER)
@@ -99,18 +100,17 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User with that id not found")
     })
     @DeleteMapping(path = "/{id}")
-    public void deleteUser(@PathVariable(name = "id") long id,
-                           @AuthenticationPrincipal UserDetails authDetails) {
-        userService.deleteUser(id, authDetails);
+    public void deleteUser(@PathVariable(name = "id") long id) {
+        userService.deleteUser(id);
     }
 
-    private ResponseDTO toUserResponseDTO(final User user) {
-        return new ResponseDTO(
-                user.getId(),
-                user.getEmail(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getCreatedAt()
-        );
+    private UserDTO toUserDTO(User user) {
+        UserDTO userDTO = new UserDTO();
+
+        userDTO.setEmail(user.getEmail());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+
+        return userDTO;
     }
 }

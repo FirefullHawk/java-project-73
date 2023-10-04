@@ -16,6 +16,8 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import java.util.Date;
 import java.util.List;
 
@@ -25,26 +27,18 @@ import static jakarta.persistence.TemporalType.TIMESTAMP;
 @Entity
 @Getter
 @Setter
-@Table(name = "users")
+@Table(name = "statuses")
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class Status {
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
 
+    @NotBlank
+    @Size(min = 3, max = 1_000)
     @Column(unique = true)
-    private String email;
-
-    @NotBlank
-    private String firstName;
-
-    @NotBlank
-    private String lastName;
-
-    @NotBlank
-    @JsonIgnore
-    private String password;
+    private String name;
 
     @CreationTimestamp
     @Temporal(TIMESTAMP)
@@ -52,14 +46,10 @@ public class User {
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "author")
-    private List<Task> listTaskAuthor;
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "executor")
-    private List<Task> listTaskExecutor;
+            mappedBy = "taskStatus")
+    private List<Task> tasks;
 
-    public User(final Long id) {
+    public Status(final Long id) {
         this.id = id;
     }
 }

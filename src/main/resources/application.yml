@@ -1,14 +1,24 @@
 server:
-  port: ${PORT:5001}
+  port: ${PORT:8001}
 
 base-url: /api
 
 spring:
-  profiles:
-    active: ${PROFILE:dev}
+  application:
+    name: taskManager
 
-jwt:
-  secret: YzNlNjVkZTQ3YjEyNWY5MWVmNWE2MjQyMzRiYmE4NTRmNGY0N2EzMDc3ZTIwYTUxNjM3ZGI0YTgyZWYyNjA0Mg==
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
 
-rollbar:
-  token: {ROLLBAR_TOKEN:}
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+rollbar_token: 

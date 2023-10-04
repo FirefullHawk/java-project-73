@@ -1,0 +1,225 @@
+databaseChangeLog:
+- changeSet:
+    id: 1696338499208-1
+    author: fhawk (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: labels_seq
+        startValue: 1
+- changeSet:
+    id: 1696338499208-2
+    author: fhawk (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: statuses_seq
+        startValue: 1
+- changeSet:
+    id: 1696338499208-3
+    author: fhawk (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: tasks_seq
+        startValue: 1
+- changeSet:
+    id: 1696338499208-4
+    author: fhawk (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: users_seq
+        startValue: 1
+- changeSet:
+    id: 1696338499208-5
+    author: fhawk (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: labelsPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: labels
+- changeSet:
+    id: 1696338499208-6
+    author: fhawk (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: statusesPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: statuses
+- changeSet:
+    id: 1696338499208-7
+    author: fhawk (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: tasksPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: description
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: author_id
+            type: BIGINT
+        - column:
+            name: executor_id
+            type: BIGINT
+        - column:
+            name: task_status_id
+            type: BIGINT
+        tableName: tasks
+- changeSet:
+    id: 1696338499208-8
+    author: fhawk (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: tasks_labelsPK
+            name: tasks_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: tasks_labelsPK
+            name: labels_id
+            type: BIGINT
+        tableName: tasks_labels
+- changeSet:
+    id: 1696338499208-9
+    author: fhawk (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usersPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        tableName: users
+- changeSet:
+    id: 1696338499208-10
+    author: fhawk (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: labels_id
+        baseTableName: tasks_labels
+        constraintName: FK1jqo1eikgg8xnhi58yp81b8nl
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: labels
+        validate: true
+- changeSet:
+    id: 1696338499208-11
+    author: fhawk (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: executor_id
+        baseTableName: tasks
+        constraintName: FKbrg922bkqn5m7212jsqjg6ioe
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1696338499208-12
+    author: fhawk (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: task_status_id
+        baseTableName: tasks
+        constraintName: FKdv9k4oaxnrxb91o32qq1tes7s
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: statuses
+        validate: true
+- changeSet:
+    id: 1696338499208-13
+    author: fhawk (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: author_id
+        baseTableName: tasks
+        constraintName: FKhods8r8oyyx7tuj3c91ki2sk1
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1696338499208-14
+    author: fhawk (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: tasks_id
+        baseTableName: tasks_labels
+        constraintName: FKtmt7qqcx2mbu4jhmxu9g53o9j
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: tasks
+        validate: true
+
