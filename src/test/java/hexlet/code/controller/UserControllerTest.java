@@ -124,7 +124,7 @@ public class UserControllerTest {
     public void login() throws Exception {
 
         utils.regDefaultUser();
-        final LogInDTO rightCredentials = new LogInDTO(TEST_EMAIL_1, "0987");
+        final LogInDTO rightCredentials = new LogInDTO(TEST_EMAIL_1, "12345");
 
         final var loginRequest = post(LOGIN).content(asJson(rightCredentials)).contentType(APPLICATION_JSON);
         utils.perform(loginRequest)

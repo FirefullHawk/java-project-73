@@ -4,6 +4,7 @@ import hexlet.code.dto.UserDTO;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.service.interfaces.UserServiceInterface;
+
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,9 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
 @AllArgsConstructor
+@Transactional
 public class UserService implements UserServiceInterface {
+
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;

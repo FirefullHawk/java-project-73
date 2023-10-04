@@ -2,16 +2,18 @@ package hexlet.code.service;
 
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import lombok.AllArgsConstructor;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import static hexlet.code.config.security.SecurityConfig.DEFAULT_AUTHORITIES;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserDetailService implements UserDetailsService {
 
     private final UserRepository userRepository;

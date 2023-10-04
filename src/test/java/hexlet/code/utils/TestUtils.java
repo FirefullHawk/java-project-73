@@ -28,19 +28,19 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @Component
 public class TestUtils {
-    public static final String TEST_EMAIL_1 = "blabla@gmail.com";
-    public static final String TEST_EMAIL_2 = "badabudu@gmail.com";
+    public static final String TEST_EMAIL_1 = "arar@rar.com";
+    public static final String TEST_EMAIL_2 = "ududu@dud.com";
     public static final String LOGIN = "/login";
 
     private final UserDTO defaultUser = new UserDTO(
             TEST_EMAIL_1,
-            "Foo",
-            "Bar",
-            "0987");
+            "John",
+            "Dou",
+            "12345");
 
-    private final StatusDTO defaultStatus = new StatusDTO("Default Status");
+    private final StatusDTO defaultStatus = new StatusDTO("Test Status");
 
-    private final LabelDTO defaultLabel = new LabelDTO("Default label");
+    private final LabelDTO defaultLabel = new LabelDTO("Test label");
 
 
     @Autowired
