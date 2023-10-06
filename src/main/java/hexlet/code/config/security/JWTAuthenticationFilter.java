@@ -3,6 +3,9 @@ package hexlet.code.config.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.component.JWTHelper;
 import hexlet.code.dto.LogInDTO;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,9 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,8 +38,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                                 final HttpServletResponse response) throws AuthenticationException {
         final LogInDTO loginData = getLoginData(request);
         final var authRequest = new UsernamePasswordAuthenticationToken(
-                loginData.getEmail(),
-                loginData.getPassword()
+                loginData.email(),
+                loginData.password()
         );
         setDetails(request, authRequest);
         return getAuthenticationManager().authenticate(authRequest);

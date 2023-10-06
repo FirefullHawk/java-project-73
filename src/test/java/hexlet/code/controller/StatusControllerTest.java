@@ -2,7 +2,7 @@ package hexlet.code.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import hexlet.code.config.TestConfig;
-import hexlet.code.dto.StatusDTO;
+import hexlet.code.dto.update.StatusUpdateDTO;
 import hexlet.code.model.Status;
 import hexlet.code.repository.StatusRepository;
 import hexlet.code.utils.NamedRoutes;
@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = TestConfig.class)
 
-public class StatusControllerTest {
+public final class StatusControllerTest {
 
     @Autowired
     private StatusRepository taskStatusRepository;
@@ -58,10 +58,10 @@ public class StatusControllerTest {
     @Test
     public void createStatus() throws Exception {
 
-        final StatusDTO expectedStatus = new StatusDTO("Some status");
+        final StatusUpdateDTO expectedStatus = new StatusUpdateDTO("Some status");
 
         final var response = utils.performAuthorizedRequest(
-                        post(NamedRoutes.TASKS_PATH)
+                        post(NamedRoutes.statusesPath())
                                 .content(asJson(expectedStatus))
                                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -79,7 +79,7 @@ public class StatusControllerTest {
         final Status expectedStatus = taskStatusRepository.findAll().get(0);
 
         final var response = utils.performAuthorizedRequest(
-                        get(NamedRoutes.taskPath(expectedStatus.getId())))
+                        get(NamedRoutes.statusPath(expectedStatus.getId())))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
@@ -94,7 +94,7 @@ public class StatusControllerTest {
     public void getAllStatuses() throws Exception {
 
         final var response = utils.performAuthorizedRequest(
-                        get(NamedRoutes.TASKS_PATH))
+                        get(NamedRoutes.statusesPath()))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
@@ -118,10 +118,10 @@ public class StatusControllerTest {
         final Long statusId = defaultStatus.getId();
         final String oldStatusName = defaultStatus.getName();
 
-        final StatusDTO newStatus = new StatusDTO("Another Status");
+        final StatusUpdateDTO newStatus = new StatusUpdateDTO("Another Status");
 
         final var response = utils.performAuthorizedRequest(
-                        put(NamedRoutes.taskPath(defaultStatus.getId()))
+                        put(NamedRoutes.statusPath(defaultStatus.getId()))
                                 .content(asJson(newStatus))
                                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -142,7 +142,7 @@ public class StatusControllerTest {
         final Long statusId = taskStatusRepository.findAll().get(0).getId();
 
         utils.performAuthorizedRequest(
-                        delete(NamedRoutes.taskPath(statusId)))
+                        delete(NamedRoutes.statusPath(statusId)))
                 .andExpect(status().isOk());
 
         assertFalse(taskStatusRepository.existsById(statusId));

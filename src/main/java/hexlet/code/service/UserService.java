@@ -1,10 +1,9 @@
 package hexlet.code.service;
 
-import hexlet.code.dto.UserDTO;
+import hexlet.code.dto.update.UserUpdateDTO;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.service.interfaces.UserServiceInterface;
-
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,19 +33,19 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
-    public User createUser(UserDTO userDto) {
+    public User createUser(UserUpdateDTO userDto) {
         final User user = new User();
+
         user.setEmail(userDto.getEmail());
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        userRepository.save(user);
 
-        return user;
+        return userRepository.save(user);
     }
 
     @Override
-    public User updateUser(final long id, final UserDTO userDto) {
+    public User updateUser(final long id, final UserUpdateDTO userDto) {
         final User userToUpdate = userRepository.findById(id).get();
         userToUpdate.setEmail(userDto.getEmail());
         userToUpdate.setFirstName(userDto.getFirstName());

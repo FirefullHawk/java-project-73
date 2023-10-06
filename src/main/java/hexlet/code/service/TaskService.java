@@ -1,25 +1,25 @@
 package hexlet.code.service;
 
 import com.querydsl.core.types.Predicate;
+import hexlet.code.dto.TaskDTO;
 import hexlet.code.model.Label;
 import hexlet.code.model.Status;
-import hexlet.code.model.User;
-import hexlet.code.service.interfaces.TaskServiceInterface;
-import hexlet.code.dto.TaskDTO;
 import hexlet.code.model.Task;
+import hexlet.code.model.User;
 import hexlet.code.repository.TaskRepository;
+import hexlet.code.service.interfaces.TaskServiceInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @AllArgsConstructor
 public class TaskService implements TaskServiceInterface {
     private final TaskRepository taskRepository;
@@ -52,7 +52,7 @@ public class TaskService implements TaskServiceInterface {
         task.setName(temporaryTask.getName());
         task.setDescription(temporaryTask.getDescription());
         task.setExecutor(temporaryTask.getExecutor());
-        task.setTaskStatus(temporaryTask.getTaskStatus());
+        task.setStatus(temporaryTask.getStatus());
         task.setLabels(temporaryTask.getLabels());
         return taskRepository.save(task);
     }
@@ -85,7 +85,7 @@ public class TaskService implements TaskServiceInterface {
         return Task.builder()
                 .author(author)
                 .executor(executor)
-                .taskStatus(status)
+                .status(status)
                 .labels(labels)
                 .name(taskDto.getName())
                 .description(taskDto.getDescription())

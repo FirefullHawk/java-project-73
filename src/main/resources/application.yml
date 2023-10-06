@@ -21,4 +21,4 @@ spring:
       filter:
         enabled: true
 
-rollbar_token: 
+rollbar_token: 24cfbd3e725c4c299d787ad0abc69d94

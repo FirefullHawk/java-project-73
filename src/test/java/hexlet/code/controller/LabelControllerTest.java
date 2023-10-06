@@ -1,9 +1,10 @@
 package hexlet.code.controller;
 
-import hexlet.code.dto.LabelDTO;
+import com.fasterxml.jackson.core.type.TypeReference;
+import hexlet.code.config.TestConfig;
+import hexlet.code.dto.update.LabelUpdateDTO;
 import hexlet.code.model.Label;
 import hexlet.code.repository.LabelRepository;
-import hexlet.code.config.TestConfig;
 import hexlet.code.utils.NamedRoutes;
 import hexlet.code.utils.TestUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -15,7 +16,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
@@ -28,18 +28,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
 @ActiveProfiles(TEST_PROFILE)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = TestConfig.class)
 
-public class LabelControllerTest {
+public final class LabelControllerTest {
 
     @Autowired
     private LabelRepository labelRepository;
@@ -49,7 +49,6 @@ public class LabelControllerTest {
     @BeforeEach
     public void before() throws Exception {
         utils.regDefaultUser();
-        utils.regDefaultStatus();
         utils.regDefaultLabel();
     }
     @AfterEach
@@ -60,7 +59,7 @@ public class LabelControllerTest {
     @Test
     public void createLabel() throws Exception {
 
-        final LabelDTO expectedLabel = new LabelDTO("New label");
+        final LabelUpdateDTO expectedLabel = new LabelUpdateDTO("New label");
 
         final var response = utils.performAuthorizedRequest(
                         post(NamedRoutes.labelsPath())
@@ -95,7 +94,7 @@ public class LabelControllerTest {
     @Test
     public void getAllLabels() throws Exception {
 
-        final LabelDTO newLabel = new LabelDTO("New label");
+        final LabelUpdateDTO newLabel = new LabelUpdateDTO("New label");
         utils.regNewInstance(NamedRoutes.labelsPath(), newLabel);
 
         final var response = utils.performAuthorizedRequest(
@@ -123,7 +122,7 @@ public class LabelControllerTest {
         final Long labelId = defaultLabel.getId();
         final String oldLabelName = defaultLabel.getName();
 
-        final LabelDTO newLabel = new LabelDTO("Updated label");
+        final LabelUpdateDTO newLabel = new LabelUpdateDTO("Updated label");
 
         final var response = utils.performAuthorizedRequest(
                         put(NamedRoutes.labelPath(labelId))

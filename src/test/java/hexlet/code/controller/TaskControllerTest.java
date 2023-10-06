@@ -48,7 +48,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = TestConfig.class)
 
-public class TaskControllerTest {
+public final class TaskControllerTest {
 
     @Autowired
     private TestUtils utils;
@@ -192,11 +192,11 @@ public class TaskControllerTest {
 
         final Long defaultTaskId = taskRepository.findFirstByOrderById().get().getId();
 
-        final String newUserUsername = "new user";
+        final String newUsername = "new@user";
 
         utils.performAuthorizedRequest(
-                        delete(NamedRoutes.taskPath(defaultTaskId)))
-                .andExpect(status().isForbidden());
+                delete(NamedRoutes.taskPath(defaultTaskId)), newUsername)
+            .andExpect(status().isForbidden());
     }
 
     private TaskDTO buildTaskDTO() {

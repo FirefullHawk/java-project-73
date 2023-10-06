@@ -1,21 +1,19 @@
 package hexlet.code.utils;
 
-import hexlet.code.component.JWTHelper;
-import hexlet.code.dto.LabelDTO;
-import hexlet.code.dto.StatusDTO;
-import hexlet.code.dto.UserDTO;
-import hexlet.code.repository.LabelRepository;
-import hexlet.code.repository.TaskRepository;
-import hexlet.code.repository.StatusRepository;
-import hexlet.code.repository.UserRepository;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import hexlet.code.component.JWTHelper;
+import hexlet.code.dto.update.LabelUpdateDTO;
+import hexlet.code.dto.update.StatusUpdateDTO;
+import hexlet.code.dto.update.UserUpdateDTO;
+import hexlet.code.repository.LabelRepository;
+import hexlet.code.repository.StatusRepository;
+import hexlet.code.repository.TaskRepository;
+import hexlet.code.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -27,21 +25,20 @@ import static org.springframework.security.web.authentication.UsernamePasswordAu
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @Component
-public class TestUtils {
+public final class TestUtils {
     public static final String TEST_EMAIL_1 = "arar@rar.com";
     public static final String TEST_EMAIL_2 = "ududu@dud.com";
     public static final String LOGIN = "/login";
 
-    private final UserDTO defaultUser = new UserDTO(
+    private final UserUpdateDTO defaultUser = new UserUpdateDTO(
             TEST_EMAIL_1,
             "John",
             "Dou",
             "12345");
 
-    private final StatusDTO defaultStatus = new StatusDTO("Test Status");
+    private final StatusUpdateDTO defaultStatus = new StatusUpdateDTO("Test Status");
 
-    private final LabelDTO defaultLabel = new LabelDTO("Test label");
-
+    private final LabelUpdateDTO defaultLabel = new LabelUpdateDTO("Test label");
 
     @Autowired
     private MockMvc mockMvc;
@@ -75,14 +72,22 @@ public class TestUtils {
         regNewInstance(NamedRoutes.labelsPath(), defaultLabel);
     }
 
-    public ResultActions regNewInstance(String path, Object userDto) throws Exception {
+    public ResultActions regNewInstance(String path, Object dto) throws Exception {
         return performAuthorizedRequest(post(path)
-                .content(asJson(userDto))
+                .content(asJson(dto))
                 .contentType(MediaType.APPLICATION_JSON));
     }
 
     public ResultActions performAuthorizedRequest(final MockHttpServletRequestBuilder request) throws Exception {
         final String token = jwtHelper.expiring(Map.of(SPRING_SECURITY_FORM_USERNAME_KEY, TEST_EMAIL_1));
+        request.header(AUTHORIZATION, token);
+
+        return perform(request);
+    }
+
+    public ResultActions performAuthorizedRequest(
+        final MockHttpServletRequestBuilder request, String newUser) throws Exception {
+        final String token = jwtHelper.expiring(Map.of(SPRING_SECURITY_FORM_USERNAME_KEY, newUser));
         request.header(AUTHORIZATION, token);
 
         return perform(request);

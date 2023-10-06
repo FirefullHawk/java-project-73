@@ -23,6 +23,4 @@ public class TestConfig {
     public RestTemplate restTemplate() {
         return new RestTemplateBuilder().build();
     }
-
-
 }

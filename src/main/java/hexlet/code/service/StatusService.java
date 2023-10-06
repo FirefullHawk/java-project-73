@@ -1,6 +1,6 @@
 package hexlet.code.service;
 
-import hexlet.code.dto.StatusDTO;
+import hexlet.code.dto.update.StatusUpdateDTO;
 import hexlet.code.model.Status;
 import hexlet.code.repository.StatusRepository;
 import hexlet.code.service.interfaces.StatusServiceInterface;
@@ -8,11 +8,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @AllArgsConstructor
 public class StatusService implements StatusServiceInterface {
     private final StatusRepository taskStatusRepository;
@@ -29,7 +28,7 @@ public class StatusService implements StatusServiceInterface {
     }
 
     @Override
-    public Status createStatus(StatusDTO taskStatusDto) {
+    public Status createStatus(StatusUpdateDTO taskStatusDto) {
         final Status taskStatus = new Status();
         taskStatus.setName(taskStatusDto.getName());
         taskStatusRepository.save(taskStatus);
@@ -37,7 +36,7 @@ public class StatusService implements StatusServiceInterface {
     }
 
     @Override
-    public Status updateStatus(StatusDTO taskStatusDto, long id) {
+    public Status updateStatus(StatusUpdateDTO taskStatusDto, long id) {
         final Status taskStatus = getStatus(id);
         taskStatus.setName(taskStatusDto.getName());
         return taskStatusRepository.save(taskStatus);

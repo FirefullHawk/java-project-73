@@ -28,4 +28,4 @@ Before you can build this project, you must install and configure the following 
 * JDK 20
 * Gradle 8.3
 * Node.js 16.13.1
-* Makefile (Gnome)
+* Makefile

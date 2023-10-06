@@ -1,10 +1,11 @@
 package hexlet.code.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import hexlet.code.config.TestConfig;
 import hexlet.code.dto.LogInDTO;
-import hexlet.code.dto.UserDTO;
+import hexlet.code.dto.update.UserUpdateDTO;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
-import hexlet.code.config.TestConfig;
 import hexlet.code.utils.NamedRoutes;
 import hexlet.code.utils.TestUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -15,7 +16,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.List;
 
@@ -26,15 +26,15 @@ import static hexlet.code.utils.TestUtils.TEST_EMAIL_2;
 import static hexlet.code.utils.TestUtils.asJson;
 import static hexlet.code.utils.TestUtils.fromJson;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -44,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = TestConfig.class)
 
-public class UserControllerTest {
+public final class UserControllerTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -104,7 +104,7 @@ public class UserControllerTest {
 
         int i = 0;
         for (var user : users) {
-            assertThat(i < expected.size());
+            assertTrue(i < expected.size());
             assertEquals(user.getId(), expected.get(i).getId());
             assertEquals(user.getEmail(), expected.get(i).getEmail());
             assertEquals(user.getFirstName(), expected.get(i).getFirstName());
@@ -146,7 +146,7 @@ public class UserControllerTest {
     public void updateUser() throws Exception {
 
         utils.regDefaultUser();
-        final UserDTO newUserDto = new UserDTO(
+        final UserUpdateDTO newUserDto = new UserUpdateDTO(
                 TEST_EMAIL_2,
                 "new name",
                 "new last name",
@@ -163,7 +163,7 @@ public class UserControllerTest {
         final User user = fromJson(response.getContentAsString(), new TypeReference<>() { });
         final User expectedUser = userRepository.findAll().get(0);
 
-        assertThat(expectedUser.getId()).isEqualTo(user.getId());
+        assertThat(user.getId()).isEqualTo(expectedUser.getId());
         assertThat(expectedUser.getEmail()).isEqualTo(user.getEmail());
         assertThat(expectedUser.getFirstName()).isEqualTo(user.getFirstName());
         assertThat(expectedUser.getLastName()).isEqualTo(user.getLastName());
@@ -190,7 +190,7 @@ public class UserControllerTest {
     public void deleteUserFails() throws Exception {
 
         utils.regDefaultUser();
-        final UserDTO newUserDto = new UserDTO(
+        final UserUpdateDTO newUserDto = new UserUpdateDTO(
                 TEST_EMAIL_2,
                 "fname",
                 "lname",

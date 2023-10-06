@@ -2,9 +2,7 @@ package hexlet.code.service;
 
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,10 +17,10 @@ public class UserDetailService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail(username)
+    public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
                 .map(this::buildSpringUser)
-                .orElseThrow(() -> new UsernameNotFoundException("Not found user with 'username': " + username));
+                .orElseThrow(() -> new UsernameNotFoundException("Not found user with 'email': " + email));
     }
 
     private UserDetails buildSpringUser(final User user) {

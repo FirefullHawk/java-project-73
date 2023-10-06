@@ -3,20 +3,19 @@ package hexlet.code.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.FetchType;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 import java.util.Date;
 import java.util.List;
@@ -46,7 +45,7 @@ public class Status {
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "taskStatus")
+            mappedBy = "status")
     private List<Task> tasks;
 
     public Status(final Long id) {

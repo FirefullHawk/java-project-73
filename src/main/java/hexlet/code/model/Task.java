@@ -1,13 +1,5 @@
 package hexlet.code.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Fetch;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -17,6 +9,13 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
 
 import java.util.Date;
 import java.util.Set;
@@ -44,7 +43,7 @@ public class Task {
     private User executor;
 
     @ManyToOne
-    private Status taskStatus;
+    private Status status;
 
     @NotBlank
     @Size(min = 3, max = 1000)

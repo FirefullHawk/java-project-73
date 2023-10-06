@@ -1,8 +1,6 @@
 package hexlet.code.config.security;
 
 import hexlet.code.component.JWTHelper;
-import hexlet.code.config.security.JWTAuthenticationFilter;
-import hexlet.code.config.security.JWTAuthorizationFilter;
 import java.util.List;
 
 import hexlet.code.utils.NamedRoutes;
