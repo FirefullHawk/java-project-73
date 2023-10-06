@@ -21,4 +21,8 @@ spring:
       filter:
         enabled: true
 
-rollbar_token: 24cfbd3e725c4c299d787ad0abc69d94
+springdoc:
+  api-docs:
+    path: /swagger.html
+
+rollbar_token: a0ec53ac26034f3cb4246ca1ee86a204
