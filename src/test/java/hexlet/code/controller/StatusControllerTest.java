@@ -2,9 +2,9 @@ package hexlet.code.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import hexlet.code.config.TestConfig;
-import hexlet.code.dto.update.StatusUpdateDTO;
-import hexlet.code.model.Status;
-import hexlet.code.repository.StatusRepository;
+import hexlet.code.dto.update.TaskStatusUpdateDTO;
+import hexlet.code.model.TaskStatus;
+import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.utils.NamedRoutes;
 import hexlet.code.utils.TestUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public final class StatusControllerTest {
 
     @Autowired
-    private StatusRepository taskStatusRepository;
+    private TaskStatusRepository taskStatusRepository;
     @Autowired
     private TestUtils utils;
 
@@ -58,7 +58,7 @@ public final class StatusControllerTest {
     @Test
     public void createStatus() throws Exception {
 
-        final StatusUpdateDTO expectedStatus = new StatusUpdateDTO("Some status");
+        final TaskStatusUpdateDTO expectedStatus = new TaskStatusUpdateDTO("Some status");
 
         final var response = utils.performAuthorizedRequest(
                         post(NamedRoutes.statusesPath())
@@ -67,7 +67,7 @@ public final class StatusControllerTest {
                 .andExpect(status().isCreated())
                 .andReturn().getResponse();
 
-        final Status status = fromJson(response.getContentAsString(), new TypeReference<>() { });
+        final TaskStatus status = fromJson(response.getContentAsString(), new TypeReference<>() { });
 
         assertThat(taskStatusRepository.getReferenceById(status.getId())).isNotNull();
         assertThat(status.getName()).isEqualTo(expectedStatus.getName());
@@ -76,7 +76,7 @@ public final class StatusControllerTest {
     @Test
     public void getStatusById() throws Exception {
 
-        final Status expectedStatus = taskStatusRepository.findAll().get(0);
+        final TaskStatus expectedStatus = taskStatusRepository.findAll().get(0);
 
         final var response = utils.performAuthorizedRequest(
                         get(NamedRoutes.statusPath(expectedStatus.getId())))
@@ -84,7 +84,7 @@ public final class StatusControllerTest {
                 .andReturn()
                 .getResponse();
 
-        final Status taskStatus = fromJson(response.getContentAsString(), new TypeReference<>() { });
+        final TaskStatus taskStatus = fromJson(response.getContentAsString(), new TypeReference<>() { });
 
         assertThat(expectedStatus.getId()).isEqualTo(taskStatus.getId());
         assertThat(expectedStatus.getName()).isEqualTo(taskStatus.getName());
@@ -99,8 +99,8 @@ public final class StatusControllerTest {
                 .andReturn()
                 .getResponse();
 
-        final List<Status> taskStatuses = fromJson(response.getContentAsString(), new TypeReference<>() { });
-        final List<Status> expected = taskStatusRepository.findAll();
+        final List<TaskStatus> taskStatuses = fromJson(response.getContentAsString(), new TypeReference<>() { });
+        final List<TaskStatus> expected = taskStatusRepository.findAll();
 
         int i = 0;
         for (var status : taskStatuses) {
@@ -114,11 +114,11 @@ public final class StatusControllerTest {
     @Test
     public void updateStatus() throws Exception {
 
-        final Status defaultStatus = taskStatusRepository.findAll().get(0);
+        final TaskStatus defaultStatus = taskStatusRepository.findAll().get(0);
         final Long statusId = defaultStatus.getId();
         final String oldStatusName = defaultStatus.getName();
 
-        final StatusUpdateDTO newStatus = new StatusUpdateDTO("Another Status");
+        final TaskStatusUpdateDTO newStatus = new TaskStatusUpdateDTO("Another Status");
 
         final var response = utils.performAuthorizedRequest(
                         put(NamedRoutes.statusPath(defaultStatus.getId()))
@@ -128,7 +128,7 @@ public final class StatusControllerTest {
                 .andReturn()
                 .getResponse();
 
-        final Status updatedStatus = fromJson(response.getContentAsString(), new TypeReference<>() { });
+        final TaskStatus updatedStatus = fromJson(response.getContentAsString(), new TypeReference<>() { });
         final String updatedStatusName = updatedStatus.getName();
 
         assertThat(taskStatusRepository.existsById(statusId)).isTrue();

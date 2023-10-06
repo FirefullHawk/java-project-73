@@ -1,8 +1,8 @@
 package hexlet.code.controller.api;
 
-import hexlet.code.dto.StatusDTO;
-import hexlet.code.dto.update.StatusUpdateDTO;
-import hexlet.code.model.Status;
+import hexlet.code.dto.TaskStatusDTO;
+import hexlet.code.dto.update.TaskStatusUpdateDTO;
+import hexlet.code.model.TaskStatus;
 import hexlet.code.service.StatusService;
 import hexlet.code.utils.NamedRoutes;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,19 +35,19 @@ public class StatusController {
 
     @Operation(summary = "Create new task status")
     @ApiResponse(responseCode = "201", description = "New task status successfully created",
-        content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Status.class))})
+        content = {@Content(mediaType = "application/json", schema = @Schema(implementation = TaskStatus.class))})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    Status createStatus(@RequestBody @Valid StatusUpdateDTO dto) {
+    TaskStatus createStatus(@RequestBody @Valid TaskStatusUpdateDTO dto) {
         return statusService.createStatus(dto);
     }
 
     @Operation(summary = "Get all task statuses")
     @ApiResponse(responseCode = "200", description = "All task statuses are found",
-        content = @Content(schema = @Schema(implementation = Status.class)))
+        content = @Content(schema = @Schema(implementation = TaskStatus.class)))
     @GetMapping
-    List<StatusDTO> findAllStatuses() {
-        List<Status> existedStatuses = statusService.getStatuses();
+    List<TaskStatusDTO> findAllStatuses() {
+        List<TaskStatus> existedStatuses = statusService.getStatuses();
         return existedStatuses.stream()
                 .map(StatusController::toStatusDTO)
                 .collect(Collectors.toList());
@@ -57,11 +57,11 @@ public class StatusController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "The task status is found",
             content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = Status.class))}),
+                    schema = @Schema(implementation = TaskStatus.class))}),
         @ApiResponse(responseCode = "404", description = "No such task status found", content = @Content)})
     @GetMapping(path = "/{id}")
-    StatusDTO findStatusById(@PathVariable long id) {
-        Status existedStatus = statusService.getStatus(id);
+    TaskStatusDTO findStatusById(@PathVariable long id) {
+        TaskStatus existedStatus = statusService.getStatus(id);
         return toStatusDTO(existedStatus);
     }
 
@@ -69,12 +69,12 @@ public class StatusController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "The task status has been successfully updated",
             content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = Status.class))}),
+                    schema = @Schema(implementation = TaskStatus.class))}),
         @ApiResponse(responseCode = "400", description = "Bad request", content = @Content)})
     @PutMapping(path = "/{id}")
-    StatusDTO updateStatus(@RequestBody @Valid StatusUpdateDTO dto,
-                                  @PathVariable long id) {
-        Status updatedStatus = statusService.updateStatus(dto, id);
+    TaskStatusDTO updateStatus(@RequestBody @Valid TaskStatusUpdateDTO dto,
+                               @PathVariable long id) {
+        TaskStatus updatedStatus = statusService.updateStatus(dto, id);
         return toStatusDTO(updatedStatus);
     }
 
@@ -87,7 +87,7 @@ public class StatusController {
         statusService.deleteStatus(id);
     }
 
-    private static StatusDTO toStatusDTO(Status status) {
-        return new StatusDTO(status.getId(), status.getName(), status.getCreatedAt());
+    private static TaskStatusDTO toStatusDTO(TaskStatus status) {
+        return new TaskStatusDTO(status.getId(), status.getName(), status.getCreatedAt());
     }
 }

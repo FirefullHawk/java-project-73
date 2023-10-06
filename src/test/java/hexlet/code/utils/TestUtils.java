@@ -5,10 +5,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.component.JWTHelper;
 import hexlet.code.dto.update.LabelUpdateDTO;
-import hexlet.code.dto.update.StatusUpdateDTO;
+import hexlet.code.dto.update.TaskStatusUpdateDTO;
 import hexlet.code.dto.update.UserUpdateDTO;
 import hexlet.code.repository.LabelRepository;
-import hexlet.code.repository.StatusRepository;
+import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public final class TestUtils {
             "Dou",
             "12345");
 
-    private final StatusUpdateDTO defaultStatus = new StatusUpdateDTO("Test Status");
+    private final TaskStatusUpdateDTO defaultStatus = new TaskStatusUpdateDTO("Test Status");
 
     private final LabelUpdateDTO defaultLabel = new LabelUpdateDTO("Test label");
 
@@ -45,7 +45,7 @@ public final class TestUtils {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private StatusRepository taskStatusRepository;
+    private TaskStatusRepository taskStatusRepository;
     @Autowired
     private LabelRepository labelRepository;
     @Autowired

@@ -43,7 +43,7 @@ public class Task {
     private User executor;
 
     @ManyToOne
-    private Status status;
+    private TaskStatus taskStatus;
 
     @NotBlank
     @Size(min = 3, max = 1000)

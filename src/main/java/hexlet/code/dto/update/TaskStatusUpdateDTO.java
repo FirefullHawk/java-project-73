@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StatusUpdateDTO {
+public class TaskStatusUpdateDTO {
     @NotBlank(message = "Field 'name' must not be empty!")
     private String name;
 }

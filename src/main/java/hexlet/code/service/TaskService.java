@@ -3,11 +3,12 @@ package hexlet.code.service;
 import com.querydsl.core.types.Predicate;
 import hexlet.code.dto.TaskDTO;
 import hexlet.code.model.Label;
-import hexlet.code.model.Status;
+import hexlet.code.model.TaskStatus;
 import hexlet.code.model.Task;
 import hexlet.code.model.User;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.service.interfaces.TaskServiceInterface;
+import hexlet.code.service.interfaces.TaskStatusServiceInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 public class TaskService implements TaskServiceInterface {
     private final TaskRepository taskRepository;
     private final LabelService labelService;
-    private final StatusService taskStatusService;
+    private final TaskStatusServiceInterface taskStatusService;
     private final UserService userService;
 
 
@@ -52,7 +53,7 @@ public class TaskService implements TaskServiceInterface {
         task.setName(temporaryTask.getName());
         task.setDescription(temporaryTask.getDescription());
         task.setExecutor(temporaryTask.getExecutor());
-        task.setStatus(temporaryTask.getStatus());
+        task.setTaskStatus(temporaryTask.getTaskStatus());
         task.setLabels(temporaryTask.getLabels());
         return taskRepository.save(task);
     }
@@ -70,7 +71,7 @@ public class TaskService implements TaskServiceInterface {
                 .map(userService::getUserById)
                 .orElse(null);
 
-        final Status status = Optional.ofNullable(taskDto.getTaskStatusId())
+        final TaskStatus status = Optional.ofNullable(taskDto.getTaskStatusId())
                 .map(taskStatusService::getStatus)
                 .orElse(null);
 
@@ -85,7 +86,7 @@ public class TaskService implements TaskServiceInterface {
         return Task.builder()
                 .author(author)
                 .executor(executor)
-                .status(status)
+                .taskStatus(status)
                 .labels(labels)
                 .name(taskDto.getName())
                 .description(taskDto.getDescription())

@@ -3,12 +3,12 @@ package hexlet.code.controller;
 import hexlet.code.dto.TaskDTO;
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;
-import hexlet.code.model.Status;
+import hexlet.code.model.TaskStatus;
 import hexlet.code.config.TestConfig;
 import hexlet.code.model.User;
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
-import hexlet.code.repository.StatusRepository;
+import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.utils.NamedRoutes;
 import hexlet.code.utils.TestUtils;
@@ -59,7 +59,7 @@ public final class TaskControllerTest {
     @Autowired
     private LabelRepository labelRepository;
     @Autowired
-    private StatusRepository taskStatusRepository;
+    private TaskStatusRepository taskStatusRepository;
 
     @BeforeEach
     public void before() throws Exception {
@@ -202,7 +202,7 @@ public final class TaskControllerTest {
     private TaskDTO buildTaskDTO() {
 
         User defaultUser = userRepository.findAll().stream().filter(Objects::nonNull).findFirst().get();
-        Status defaultStatus = taskStatusRepository.findAll().stream().filter(Objects::nonNull).findFirst().get();
+        TaskStatus defaultStatus = taskStatusRepository.findAll().stream().filter(Objects::nonNull).findFirst().get();
         Label defaultLabel = labelRepository.findAll().stream().filter(Objects::nonNull).findFirst().get();
         return  new TaskDTO(
                 "task",

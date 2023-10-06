@@ -29,7 +29,7 @@ import static jakarta.persistence.TemporalType.TIMESTAMP;
 @Table(name = "statuses")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Status {
+public class TaskStatus {
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
@@ -45,10 +45,10 @@ public class Status {
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "status")
+            mappedBy = "taskStatus")
     private List<Task> tasks;
 
-    public Status(final Long id) {
+    public TaskStatus(final Long id) {
         this.id = id;
     }
 }
