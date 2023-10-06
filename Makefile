@@ -2,10 +2,10 @@ setup:
 	gradle wrapper --gradle-version 8.3
 
 clean:
-	./gradlew clean
+	gradle clean
 
 build:
-	./gradlew clean build
+	gradle clean build
 
 start:
 	./gradlew bootRun --args='--spring.profiles.active=dev'
@@ -14,27 +14,27 @@ start-prod:
 	./gradlew bootRun --args='--spring.profiles.active=prod'
 
 install:
-	./gradlew installDist
+	gradle installDist
 
 start-dist:
 	./build/install/app/bin/app
 
 lint:
-	./gradlew checkstyleMain checkstyleTest
+	gradle checkstyleMain checkstyleTest
 
 test:
-	./gradlew test
+	gradle test
 
 report:
-	./gradlew jacocoTestReport
+	gradle jacocoTestReport
 
 check-updates:
-	./gradlew dependencyUpdates
+	gradle dependencyUpdates
 
 generate-migrations:
 	gradle diffChangeLog
 
 db-migrate:
-	./gradlew update
+	gradle update
 
 .PHONY: build
