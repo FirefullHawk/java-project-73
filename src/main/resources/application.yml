@@ -25,4 +25,4 @@ springdoc:
   api-docs:
     path: /swagger.html
 
-rollbar_token: a0ec53ac26034f3cb4246ca1ee86a204
+rollbar_token: 2d74bbb8c9df4d268cc1edc8ff77529b
