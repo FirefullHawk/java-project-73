@@ -1,7 +1,7 @@
 package hexlet.code.service;
 
 import com.querydsl.core.types.Predicate;
-import hexlet.code.dto.TaskDTO;
+import hexlet.code.dto.required.TaskRequiredDTO;
 import hexlet.code.model.Label;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.Task;
@@ -14,17 +14,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @AllArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final LabelService labelService;
     private final StatusService taskStatusService;
     private final UserService userService;
 
 
-    public Task createTask(TaskDTO taskDto) {
+    public Task createTask(TaskRequiredDTO taskDto) {
         return taskRepository.save(buildTask(taskDto));
     }
 
@@ -37,7 +39,7 @@ public class TaskService {
         return (List<Task>) taskRepository.findAll(predicate);
     }
 
-    public Task updateTask(TaskDTO taskDto, Long id) {
+    public Task updateTask(TaskRequiredDTO taskDto, Long id) {
         Task temporaryTask = buildTask(taskDto);
         final Task task = taskRepository.findById(id)
                 .orElseThrow();
@@ -55,16 +57,19 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
-    private Task buildTask(TaskDTO taskDto) {
+    private Task buildTask(TaskRequiredDTO taskDto) {
         final User author = userService.getCurrentUser();
-        final User executor = taskDto.executor();
+        final User executor = userService.getUserById(taskDto.executorId());
 
-        final TaskStatus status = Optional.ofNullable(taskDto.taskStatus())
+        final TaskStatus status = Optional.ofNullable(taskDto.taskStatusId())
                 .map(taskStatusService::getStatus)
                 .orElse(null);
 
 
-        final Set<Label> labels = taskDto.labels();
+        final Set<Label> labels = taskDto.labelIds()
+                                      .stream()
+                                      .map(labelService::getLabelById)
+                                      .collect(Collectors.toSet());
 
         return Task.builder()
                 .author(author)

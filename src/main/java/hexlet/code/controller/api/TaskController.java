@@ -1,6 +1,7 @@
 package hexlet.code.controller.api;
 
 import com.querydsl.core.types.Predicate;
+import hexlet.code.dto.required.TaskRequiredDTO;
 import hexlet.code.dto.TaskDTO;
 import hexlet.code.model.Task;
 import hexlet.code.service.TaskService;
@@ -42,10 +43,12 @@ public class TaskController {
         @ApiResponse(responseCode = "201", description = "Task has been created",
                 content = {@Content(mediaType = "application/json",
                         schema = @Schema(implementation = Task.class))}),
-        @ApiResponse(responseCode = "400", description = "Bad request", content = @Content)})
+        @ApiResponse(responseCode = "400", description = "Bad request", content = @Content),
+        @ApiResponse(responseCode = "422", description = "Task data is incorrect", content = @Content)})
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    TaskDTO createTask(@RequestBody @Valid TaskDTO dto) {
+    TaskDTO createTask(@RequestBody @Valid TaskRequiredDTO dto) {
         return TaskDTO.toTaskDTO(taskService.createTask(dto));
     }
 
@@ -81,8 +84,8 @@ public class TaskController {
                         schema = @Schema(implementation = Task.class))}),
         @ApiResponse(responseCode = "400", description = "Bad request", content = @Content)})
     @PutMapping(path = "/{id}")
-    TaskDTO updateTask(@RequestBody @Valid TaskDTO dto,
-                              @PathVariable long id) {
+    TaskDTO updateTask(@RequestBody @Valid TaskRequiredDTO dto,
+                              @PathVariable Long id) {
 
         return TaskDTO.toTaskDTO(taskService.updateTask(dto, id));
     }

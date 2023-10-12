@@ -2,7 +2,6 @@ package hexlet.code.dto;
 
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;
-import hexlet.code.model.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.lang.Nullable;
@@ -14,8 +13,8 @@ public record TaskDTO(@Nullable Long id,
      @NotBlank(message = "Name is required")
      String name,
      String description,
-     User author,
-     User executor,
+     UserDTO author,
+     UserDTO executor,
      @NotNull(message = "Status is required")
      Long taskStatus,
      @Nullable
@@ -26,8 +25,8 @@ public record TaskDTO(@Nullable Long id,
             task.getId(),
             task.getName(),
             task.getDescription(),
-            task.getAuthor(),
-            task.getExecutor(),
+            UserDTO.toUserDTO(task.getAuthor()),
+            UserDTO.toUserDTO(task.getExecutor()),
             task.getTaskStatus().getId(),
             task.getLabels(),
             task.getCreatedAt()

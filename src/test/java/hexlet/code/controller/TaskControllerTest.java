@@ -1,6 +1,8 @@
 package hexlet.code.controller;
 
 import hexlet.code.dto.TaskDTO;
+import hexlet.code.dto.UserDTO;
+import hexlet.code.dto.required.TaskRequiredDTO;
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
@@ -76,7 +78,7 @@ public final class TaskControllerTest {
     @Test
     public void createTask() throws Exception {
 
-        final TaskDTO expectedTask = buildTaskDTO();
+        final TaskRequiredDTO expectedTask = buildTaskDTO();
 
         final var response = utils.performAuthorizedRequest(
                         post(NamedRoutes.tasksPath())
@@ -94,7 +96,7 @@ public final class TaskControllerTest {
     @Test
     public void getTaskById() throws Exception {
 
-        final TaskDTO defaultTask = buildTaskDTO();
+        final TaskRequiredDTO defaultTask = buildTaskDTO();
         getTaskRequest(defaultTask);
 
         final Task expectedTask = taskRepository.findFirstByOrderById().get();
@@ -114,7 +116,7 @@ public final class TaskControllerTest {
     @Test
     public void getAllTasks() throws Exception {
 
-        final TaskDTO defaultTask = buildTaskDTO();
+        final TaskRequiredDTO defaultTask = buildTaskDTO();
         getTaskRequest(defaultTask);
 
         final var response = utils.performAuthorizedRequest(
@@ -138,7 +140,7 @@ public final class TaskControllerTest {
     @Test
     public void updateTask() throws Exception {
 
-        final TaskDTO taskDto = buildTaskDTO();
+        final TaskRequiredDTO taskDto = buildTaskDTO();
         getTaskRequest(taskDto);
 
         final Task defaultTask = taskRepository.findFirstByOrderById().get();
@@ -146,7 +148,8 @@ public final class TaskControllerTest {
         final Long taskId = defaultTask.getId();
         final String oldTaskName = defaultTask.getName();
 
-        final TaskDTO taskDtoUpdate = buildTaskDTO("Updated task title", "Updated task description");
+        final TaskRequiredDTO taskDtoUpdate
+            = buildTaskDTO("Updated task title", "Updated task description");
 
         var response = utils.performAuthorizedRequest(
                         put(NamedRoutes.taskPath(taskId))
@@ -169,7 +172,7 @@ public final class TaskControllerTest {
     @Test
     public void deleteTask() throws Exception {
 
-        final TaskDTO defaultTask = buildTaskDTO();
+        final TaskRequiredDTO defaultTask = buildTaskDTO();
         getTaskRequest(defaultTask);
 
         final Task task = taskRepository.findFirstByOrderById().get();
@@ -186,7 +189,7 @@ public final class TaskControllerTest {
     @Test
     public void deleteTaskFail() throws Exception {
 
-        final TaskDTO defaultTask = buildTaskDTO();
+        final TaskRequiredDTO defaultTask = buildTaskDTO();
         getTaskRequest(defaultTask);
 
         final Long defaultTaskId = taskRepository.findFirstByOrderById().get().getId();
@@ -198,41 +201,37 @@ public final class TaskControllerTest {
             .andExpect(status().isForbidden());
     }
 
-    private TaskDTO buildTaskDTO() {
+    private TaskRequiredDTO buildTaskDTO() {
 
         User defaultUser = userRepository.findAll().stream().filter(Objects::nonNull).findFirst().get();
         TaskStatus defaultStatus = taskStatusRepository.findAll().stream().filter(Objects::nonNull).findFirst().get();
         Label defaultLabel = labelRepository.findAll().stream().filter(Objects::nonNull).findFirst().get();
-        return  new TaskDTO(
-                null,
+        return new TaskRequiredDTO(
                 "task",
                 "task_description",
-                defaultUser,
-                defaultUser,
+                UserDTO.toUserDTO(defaultUser).getId(),
+                UserDTO.toUserDTO(defaultUser).getId(),
                 defaultStatus.getId(),
-                Set.of(defaultLabel),
-                null
+                Set.of(defaultLabel.getId())
         );
     }
 
-    private TaskDTO buildTaskDTO(String name, String description) {
+    private TaskRequiredDTO buildTaskDTO(String name, String description) {
 
         User defaultUser = userRepository.findAll().stream().filter(Objects::nonNull).findFirst().get();
         TaskStatus defaultStatus = taskStatusRepository.findAll().stream().filter(Objects::nonNull).findFirst().get();
         Label defaultLabel = labelRepository.findAll().stream().filter(Objects::nonNull).findFirst().get();
-        return  new TaskDTO(
-            null,
+        return new TaskRequiredDTO(
             name,
             description,
-            defaultUser,
-            defaultUser,
+            UserDTO.toUserDTO(defaultUser).getId(),
+            UserDTO.toUserDTO(defaultUser).getId(),
             defaultStatus.getId(),
-            Set.of(defaultLabel),
-            null
+            Set.of(defaultLabel.getId())
         );
     }
 
-    private ResultActions getTaskRequest(TaskDTO taskDto) throws Exception {
+    private ResultActions getTaskRequest(TaskRequiredDTO taskDto) throws Exception {
         return utils.performAuthorizedRequest(
                 post(NamedRoutes.TASKS_PATH)
                         .content(asJson(taskDto))
