@@ -210,7 +210,8 @@ public final class TaskControllerTest {
                 defaultUser,
                 defaultUser,
                 defaultStatus.getId(),
-                Set.of(defaultLabel)
+                Set.of(defaultLabel),
+                null
         );
     }
 
@@ -226,7 +227,8 @@ public final class TaskControllerTest {
             defaultUser,
             defaultUser,
             defaultStatus.getId(),
-            Set.of(defaultLabel)
+            Set.of(defaultLabel),
+            null
         );
     }
 

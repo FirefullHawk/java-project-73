@@ -59,7 +59,7 @@ public class TaskService {
         final User author = userService.getCurrentUser();
         final User executor = taskDto.executor();
 
-        final TaskStatus status = Optional.ofNullable(taskDto.taskStatusId())
+        final TaskStatus status = Optional.ofNullable(taskDto.taskStatus())
                 .map(taskStatusService::getStatus)
                 .orElse(null);
 
