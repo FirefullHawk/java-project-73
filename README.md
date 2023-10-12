@@ -8,7 +8,7 @@
 
 [Demo on Render](https://task-manager-xddh.onrender.com)
 
-[Swagger Api]()
+[Swagger Api](https://task-manager-xddh.onrender.com/swagger-ui/index.html)
 
 <h2><b>Task Manager</b></h2>
 <p>Allows to set tasks, assign performers and change their statuses.</p>

@@ -1,9 +1,8 @@
 package hexlet.code.controller.api;
 
 import hexlet.code.dto.UserDTO;
-import hexlet.code.dto.update.UserUpdateDTO;
 import hexlet.code.model.User;
-import hexlet.code.service.interfaces.UserServiceInterface;
+import hexlet.code.service.UserService;
 import hexlet.code.utils.NamedRoutes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,7 +32,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RequestMapping("${base-url}" + NamedRoutes.USERS_PATH)
 public class UserController {
 
-    private final UserServiceInterface userService;
+    private final UserService userService;
 
     private static final String OWNER = """
             @userRepository.findById(#id).get().getEmail() == authentication.getName()
@@ -47,8 +46,8 @@ public class UserController {
     })
     @PostMapping
     @ResponseStatus(CREATED)
-    User createUser(@Valid @RequestBody UserUpdateDTO userDto) {
-        return userService.createUser(userDto);
+    UserDTO createUser(@Valid @RequestBody UserDTO userDto) {
+        return UserDTO.toUserDTO(userService.createUser(userDto));
     }
 
     @Operation(summary = "Get list of all users")
@@ -60,7 +59,7 @@ public class UserController {
     @GetMapping
     List<UserDTO> findAllUsers() {
         return userService.getAllUsers().stream()
-                .map(this::toUserDTO)
+                .map(UserDTO::toUserDTO)
                 .collect(Collectors.toList());
     }
 
@@ -72,7 +71,7 @@ public class UserController {
     @GetMapping(path = "/{id}")
     UserDTO findUserById(@PathVariable long id) {
         User existedUser = userService.getUserById(id);
-        return toUserDTO(existedUser);
+        return UserDTO.toUserDTO(existedUser);
     }
 
     @Operation(summary = "Update user by his id")
@@ -84,10 +83,10 @@ public class UserController {
         @ApiResponse(responseCode = "422", description = "User data is incorrect")
     })
     @PutMapping(path = "/{id}")
-    UserDTO updateUser(@RequestBody @Valid UserUpdateDTO dto,
+    UserDTO updateUser(@RequestBody @Valid UserDTO dto,
                                       @PathVariable long id) {
         User updatedUser = userService.updateUser(id, dto);
-        return toUserDTO(updatedUser);
+        return UserDTO.toUserDTO(updatedUser);
     }
 
     @PreAuthorize(OWNER)
@@ -101,9 +100,5 @@ public class UserController {
     @DeleteMapping(path = "/{id}")
     void deleteUser(@PathVariable long id) {
         userService.deleteUser(id);
-    }
-
-    private UserDTO toUserDTO(User user) {
-        return new UserDTO(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getCreatedAt());
     }
 }

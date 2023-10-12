@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.component.JWTHelper;
-import hexlet.code.dto.update.LabelUpdateDTO;
-import hexlet.code.dto.update.TaskStatusUpdateDTO;
-import hexlet.code.dto.update.UserUpdateDTO;
+import hexlet.code.dto.LabelDTO;
+import hexlet.code.dto.TaskStatusDTO;
+import hexlet.code.dto.UserDTO;
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.TaskRepository;
@@ -30,15 +30,17 @@ public final class TestUtils {
     public static final String TEST_EMAIL_2 = "ududu@dud.com";
     public static final String LOGIN = "/login";
 
-    private final UserUpdateDTO defaultUser = new UserUpdateDTO(
+    private final UserDTO defaultUser = new UserDTO(
+            null,
             TEST_EMAIL_1,
             "John",
             "Dou",
-            "12345");
+            null,
+        "12345");
 
-    private final TaskStatusUpdateDTO defaultStatus = new TaskStatusUpdateDTO("Test Status");
+    private final TaskStatusDTO defaultStatus = new TaskStatusDTO(null, "Test Status", null);
 
-    private final LabelUpdateDTO defaultLabel = new LabelUpdateDTO("Test label");
+    private final LabelDTO defaultLabel = new LabelDTO(null, "Test label", null);
 
     @Autowired
     private MockMvc mockMvc;

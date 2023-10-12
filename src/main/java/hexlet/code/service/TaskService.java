@@ -7,8 +7,6 @@ import hexlet.code.model.TaskStatus;
 import hexlet.code.model.Task;
 import hexlet.code.model.User;
 import hexlet.code.repository.TaskRepository;
-import hexlet.code.service.interfaces.TaskServiceInterface;
-import hexlet.code.service.interfaces.TaskStatusServiceInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,30 +20,26 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @AllArgsConstructor
-public class TaskService implements TaskServiceInterface {
+public class TaskService {
     private final TaskRepository taskRepository;
     private final LabelService labelService;
-    private final TaskStatusServiceInterface taskStatusService;
+    private final StatusService taskStatusService;
     private final UserService userService;
 
 
-    @Override
     public Task createTask(TaskDTO taskDto) {
         return taskRepository.save(buildTask(taskDto));
     }
 
-    @Override
     public Task getTaskById(Long id) {
         return taskRepository.findById(id)
                 .orElseThrow();
     }
 
-    @Override
     public List<Task> getAllTasks(Predicate predicate) {
         return (List<Task>) taskRepository.findAll(predicate);
     }
 
-    @Override
     public Task updateTask(TaskDTO taskDto, Long id) {
         Task temporaryTask = buildTask(taskDto);
         final Task task = taskRepository.findById(id)
@@ -58,7 +52,6 @@ public class TaskService implements TaskServiceInterface {
         return taskRepository.save(task);
     }
 
-    @Override
     public void deleteTask(long id) {
         final Task task = taskRepository.findById(id)
                 .orElseThrow();
@@ -67,16 +60,16 @@ public class TaskService implements TaskServiceInterface {
 
     private Task buildTask(TaskDTO taskDto) {
         final User author = userService.getCurrentUser();
-        final User executor = Optional.ofNullable(taskDto.getExecutorId())
+        final User executor = Optional.ofNullable(taskDto.executorId())
                 .map(userService::getUserById)
                 .orElse(null);
 
-        final TaskStatus status = Optional.ofNullable(taskDto.getTaskStatusId())
+        final TaskStatus status = Optional.ofNullable(taskDto.taskStatusId())
                 .map(taskStatusService::getStatus)
                 .orElse(null);
 
 
-        final Set<Label> labels = Optional.ofNullable(taskDto.getLabelIds())
+        final Set<Label> labels = Optional.ofNullable(taskDto.labelIds())
                 .orElse(Set.of())
                 .stream()
                 .filter(Objects::nonNull)
@@ -88,8 +81,8 @@ public class TaskService implements TaskServiceInterface {
                 .executor(executor)
                 .taskStatus(status)
                 .labels(labels)
-                .name(taskDto.getName())
-                .description(taskDto.getDescription())
+                .name(taskDto.name())
+                .description(taskDto.description())
                 .build();
     }
 }

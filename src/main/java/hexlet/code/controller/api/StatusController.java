@@ -1,7 +1,6 @@
 package hexlet.code.controller.api;
 
 import hexlet.code.dto.TaskStatusDTO;
-import hexlet.code.dto.update.TaskStatusUpdateDTO;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.service.StatusService;
 import hexlet.code.utils.NamedRoutes;
@@ -38,8 +37,8 @@ public class StatusController {
         content = {@Content(mediaType = "application/json", schema = @Schema(implementation = TaskStatus.class))})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    TaskStatus createStatus(@RequestBody @Valid TaskStatusUpdateDTO dto) {
-        return statusService.createStatus(dto);
+    TaskStatusDTO createStatus(@RequestBody @Valid TaskStatusDTO dto) {
+        return TaskStatusDTO.toStatusDTO(statusService.createStatus(dto));
     }
 
     @Operation(summary = "Get all task statuses")
@@ -49,7 +48,7 @@ public class StatusController {
     List<TaskStatusDTO> findAllStatuses() {
         List<TaskStatus> existedStatuses = statusService.getStatuses();
         return existedStatuses.stream()
-                .map(StatusController::toStatusDTO)
+                .map(TaskStatusDTO::toStatusDTO)
                 .collect(Collectors.toList());
     }
 
@@ -62,7 +61,7 @@ public class StatusController {
     @GetMapping(path = "/{id}")
     TaskStatusDTO findStatusById(@PathVariable long id) {
         TaskStatus existedStatus = statusService.getStatus(id);
-        return toStatusDTO(existedStatus);
+        return TaskStatusDTO.toStatusDTO(existedStatus);
     }
 
     @Operation(summary = "Update the task status by id")
@@ -72,10 +71,10 @@ public class StatusController {
                     schema = @Schema(implementation = TaskStatus.class))}),
         @ApiResponse(responseCode = "400", description = "Bad request", content = @Content)})
     @PutMapping(path = "/{id}")
-    TaskStatusDTO updateStatus(@RequestBody @Valid TaskStatusUpdateDTO dto,
+    TaskStatusDTO updateStatus(@RequestBody @Valid TaskStatusDTO dto,
                                @PathVariable long id) {
         TaskStatus updatedStatus = statusService.updateStatus(dto, id);
-        return toStatusDTO(updatedStatus);
+        return TaskStatusDTO.toStatusDTO(updatedStatus);
     }
 
     @Operation(summary = "Delete the task status by id")
@@ -85,9 +84,5 @@ public class StatusController {
     @DeleteMapping(path = "/{id}")
     void deleteStatus(@PathVariable long id) {
         statusService.deleteStatus(id);
-    }
-
-    private static TaskStatusDTO toStatusDTO(TaskStatus status) {
-        return new TaskStatusDTO(status.getId(), status.getName(), status.getCreatedAt());
     }
 }

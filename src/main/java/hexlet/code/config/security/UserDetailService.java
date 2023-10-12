@@ -1,4 +1,4 @@
-package hexlet.code.service;
+package hexlet.code.config.security;
 
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
@@ -19,15 +19,15 @@ public class UserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email)
-                .map(this::buildSpringUser)
-                .orElseThrow(() -> new UsernameNotFoundException("Not found user with 'email': " + email));
+                   .map(this::buildSpringUser)
+                   .orElseThrow(() -> new UsernameNotFoundException("Not found user with 'email': " + email));
     }
 
     private UserDetails buildSpringUser(final User user) {
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                DEFAULT_AUTHORITIES
+            user.getEmail(),
+            user.getPassword(),
+            DEFAULT_AUTHORITIES
         );
     }
 }

@@ -1,7 +1,6 @@
 package hexlet.code.controller.api;
 
 import hexlet.code.dto.LabelDTO;
-import hexlet.code.dto.update.LabelUpdateDTO;
 import hexlet.code.model.Label;
 import hexlet.code.service.LabelService;
 import hexlet.code.utils.NamedRoutes;
@@ -40,8 +39,8 @@ public class LabelController {
                             schema = @Schema(implementation = Label.class))})})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    Label createLabel(@RequestBody @Valid LabelUpdateDTO dto) {
-        return labelService.createLabel(dto);
+    LabelDTO createLabel(@RequestBody @Valid LabelDTO dto) {
+        return LabelDTO.toLabelDTO(labelService.createLabel(dto));
     }
 
     @Operation(summary = "Get all labels")
@@ -51,7 +50,7 @@ public class LabelController {
     List<LabelDTO> findAllLabels() {
         return labelService.getAllLabels()
                 .stream()
-                .map(LabelController::toLabelDTO)
+                .map(LabelDTO::toLabelDTO)
                 .collect(Collectors.toList());
     }
 
@@ -63,7 +62,7 @@ public class LabelController {
         @ApiResponse(responseCode = "404", description = "No such label found", content = @Content)})
     @GetMapping(path = "/{id}")
     LabelDTO findLabelById(@PathVariable long id) {
-        return toLabelDTO(labelService.getLabelById(id));
+        return LabelDTO.toLabelDTO(labelService.getLabelById(id));
     }
 
     @Operation(summary = "Update the label by id")
@@ -73,10 +72,10 @@ public class LabelController {
                             schema = @Schema(implementation = Label.class))}),
         @ApiResponse(responseCode = "422", description = "Invalid request", content = @Content)})
     @PutMapping(path = "/{id}")
-    LabelDTO updateLabel(@RequestBody @Valid LabelUpdateDTO dto,
+    LabelDTO updateLabel(@RequestBody @Valid LabelDTO dto,
                                 @PathVariable long id) {
         Label updatedLabel = labelService.updateLabel(dto, id);
-        return toLabelDTO(updatedLabel);
+        return LabelDTO.toLabelDTO(updatedLabel);
     }
 
     @Operation(summary = "Delete the label by id")
@@ -86,9 +85,5 @@ public class LabelController {
     @DeleteMapping(path = "/{id}")
     void deleteLabel(@PathVariable long id) {
         labelService.deleteLabel(id);
-    }
-
-    private static LabelDTO toLabelDTO(Label label) {
-        return new LabelDTO(label.getId(), label.getName(), label.getCreatedAt());
     }
 }

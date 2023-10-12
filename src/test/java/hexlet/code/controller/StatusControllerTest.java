@@ -2,7 +2,7 @@ package hexlet.code.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import hexlet.code.config.TestConfig;
-import hexlet.code.dto.update.TaskStatusUpdateDTO;
+import hexlet.code.dto.TaskStatusDTO;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.utils.NamedRoutes;
@@ -22,8 +22,10 @@ import java.util.List;
 import static hexlet.code.utils.TestUtils.asJson;
 import static hexlet.code.utils.TestUtils.fromJson;
 import static org.assertj.core.api.Assertions.assertThat;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -58,7 +60,7 @@ public final class StatusControllerTest {
     @Test
     public void createStatus() throws Exception {
 
-        final TaskStatusUpdateDTO expectedStatus = new TaskStatusUpdateDTO("Some status");
+        final TaskStatusDTO expectedStatus = new TaskStatusDTO(null, "Some status", null);
 
         final var response = utils.performAuthorizedRequest(
                         post(NamedRoutes.statusesPath())
@@ -70,7 +72,7 @@ public final class StatusControllerTest {
         final TaskStatus status = fromJson(response.getContentAsString(), new TypeReference<>() { });
 
         assertThat(taskStatusRepository.getReferenceById(status.getId())).isNotNull();
-        assertThat(status.getName()).isEqualTo(expectedStatus.getName());
+        assertThat(status.getName()).isEqualTo(expectedStatus.name());
     }
 
     @Test
@@ -104,7 +106,7 @@ public final class StatusControllerTest {
 
         int i = 0;
         for (var status : taskStatuses) {
-            assertThat(i < expected.size());
+            assertTrue(i < expected.size());
             assertEquals(status.getId(), expected.get(i).getId());
             assertEquals(status.getName(), expected.get(i).getName());
             i++;
@@ -118,7 +120,7 @@ public final class StatusControllerTest {
         final Long statusId = defaultStatus.getId();
         final String oldStatusName = defaultStatus.getName();
 
-        final TaskStatusUpdateDTO newStatus = new TaskStatusUpdateDTO("Another Status");
+        final TaskStatusDTO newStatus = new TaskStatusDTO(null, "Another Status", null);
 
         final var response = utils.performAuthorizedRequest(
                         put(NamedRoutes.statusPath(defaultStatus.getId()))

@@ -3,7 +3,7 @@ package hexlet.code.controller.api;
 import com.querydsl.core.types.Predicate;
 import hexlet.code.dto.TaskDTO;
 import hexlet.code.model.Task;
-import hexlet.code.service.interfaces.TaskServiceInterface;
+import hexlet.code.service.TaskService;
 import hexlet.code.utils.NamedRoutes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,12 +25,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.stream.Collectors;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("${base-url}" + NamedRoutes.TASKS_PATH)
 public class TaskController {
 
-    private final TaskServiceInterface taskService;
+    private final TaskService taskService;
     private static final String AUTHOR = """
             @taskRepository.findById(#id).get().getAuthor().getEmail() == authentication.getName()
         """;;
@@ -43,8 +45,8 @@ public class TaskController {
         @ApiResponse(responseCode = "400", description = "Bad request", content = @Content)})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    Task createTask(@RequestBody @Valid TaskDTO dto) {
-        return taskService.createTask(dto);
+    TaskDTO createTask(@RequestBody @Valid TaskDTO dto) {
+        return TaskDTO.toTaskDTO(taskService.createTask(dto));
     }
 
     @Operation(summary = "Get tasks by predicate or get all tasks")
@@ -54,8 +56,10 @@ public class TaskController {
                         schema = @Schema(implementation = Task.class))}),
         @ApiResponse(responseCode = "404", description = "No such task found", content = @Content)})
     @GetMapping
-    Iterable<Task> getAllTask(@QuerydslPredicate(root = Task.class) Predicate predicate) {
-        return taskService.getAllTasks(predicate);
+    Iterable<TaskDTO> getAllTask(@QuerydslPredicate(root = Task.class) Predicate predicate) {
+        return taskService.getAllTasks(predicate)
+                   .stream().map(TaskDTO::toTaskDTO)
+                   .collect(Collectors.toList());
     }
 
     @Operation(summary = "Get task by id")
@@ -65,8 +69,8 @@ public class TaskController {
                         schema = @Schema(implementation = Task.class))}),
         @ApiResponse(responseCode = "404", description = "No such task found", content = @Content)})
     @GetMapping(path = "/{id}")
-    Task findTaskById(@PathVariable long id) {
-        return taskService.getTaskById(id);
+    TaskDTO findTaskById(@PathVariable long id) {
+        return TaskDTO.toTaskDTO(taskService.getTaskById(id));
     }
 
     @PreAuthorize(AUTHOR)
@@ -77,10 +81,10 @@ public class TaskController {
                         schema = @Schema(implementation = Task.class))}),
         @ApiResponse(responseCode = "400", description = "Bad request", content = @Content)})
     @PutMapping(path = "/{id}")
-    public Task updateTask(@RequestBody @Valid TaskDTO dto,
+    TaskDTO updateTask(@RequestBody @Valid TaskDTO dto,
                               @PathVariable long id) {
 
-        return taskService.updateTask(dto, id);
+        return TaskDTO.toTaskDTO(taskService.updateTask(dto, id));
     }
 
     @PreAuthorize(AUTHOR)

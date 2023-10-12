@@ -3,7 +3,7 @@ package hexlet.code.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import hexlet.code.config.TestConfig;
 import hexlet.code.dto.LogInDTO;
-import hexlet.code.dto.update.UserUpdateDTO;
+import hexlet.code.dto.UserDTO;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.utils.NamedRoutes;
@@ -146,11 +146,13 @@ public final class UserControllerTest {
     public void updateUser() throws Exception {
 
         utils.regDefaultUser();
-        final UserUpdateDTO newUserDto = new UserUpdateDTO(
+        final UserDTO newUserDto = new UserDTO(
+            null,
                 TEST_EMAIL_2,
                 "new name",
                 "new last name",
-                "new pwd");
+                null,
+            "new pwd");
 
         final Long userId = userRepository.findByEmail(TEST_EMAIL_1).get().getId();
 
@@ -190,10 +192,12 @@ public final class UserControllerTest {
     public void deleteUserFails() throws Exception {
 
         utils.regDefaultUser();
-        final UserUpdateDTO newUserDto = new UserUpdateDTO(
+        final UserDTO newUserDto = new UserDTO(
+            null,
                 TEST_EMAIL_2,
                 "fname",
                 "lname",
+                null,
                 "pwd");
 
         utils.regNewInstance(NamedRoutes.usersPath(), newUserDto);

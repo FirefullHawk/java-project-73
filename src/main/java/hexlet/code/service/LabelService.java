@@ -1,9 +1,8 @@
 package hexlet.code.service;
 
-import hexlet.code.dto.update.LabelUpdateDTO;
+import hexlet.code.dto.LabelDTO;
 import hexlet.code.model.Label;
 import hexlet.code.repository.LabelRepository;
-import hexlet.code.service.interfaces.LabelServiceInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,35 +12,31 @@ import java.util.List;
 @Service
 @Transactional
 @AllArgsConstructor
-public class LabelService implements LabelServiceInterface {
+public class LabelService {
 
     private final LabelRepository labelRepository;
-    @Override
-    public Label createLabel(LabelUpdateDTO labelDto) {
+
+    public Label createLabel(LabelDTO labelDto) {
         final Label newLabel = new Label();
-        newLabel.setName(labelDto.getName());
+        newLabel.setName(labelDto.name());
         return labelRepository.save(newLabel);
     }
 
-    @Override
     public Label getLabelById(Long id) {
         return labelRepository.findById(id)
                 .orElseThrow();
     }
 
-    @Override
     public List<Label> getAllLabels() {
         return labelRepository.findAll();
     }
 
-    @Override
-    public Label updateLabel(LabelUpdateDTO labelDto, Long id) {
+    public Label updateLabel(LabelDTO labelDto, Long id) {
         Label updateLabel = labelRepository.findById(id).get();
-        updateLabel.setName(labelDto.getName());
+        updateLabel.setName(labelDto.name());
         return labelRepository.save(updateLabel);
     }
 
-    @Override
     public void deleteLabel(Long id) {
         Label label = labelRepository.findById(id)
                 .orElseThrow();

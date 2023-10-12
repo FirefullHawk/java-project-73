@@ -43,7 +43,7 @@ public class BaseExceptionHandler {
     }
 
     @ResponseStatus(BAD_REQUEST)
-    @ExceptionHandler({HttpMessageNotReadableException.class})
+    @ExceptionHandler(HttpMessageNotReadableException.class)
     public String validationExceptionsHandler(Exception exception) {
         return exception.getMessage();
     }

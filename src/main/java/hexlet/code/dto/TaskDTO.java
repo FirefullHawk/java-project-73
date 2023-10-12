@@ -1,25 +1,31 @@
 package hexlet.code.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import hexlet.code.model.Task;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.lang.Nullable;
+
 import java.util.Set;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class TaskDTO {
-    @NotBlank
-    private String name;
-    private String description;
-    private Long authorId;
-    private Long executorId;
-    @NotNull
-    private Long taskStatusId;
-    private Set<Long> labelIds;
+public record TaskDTO(@Nullable Long id,
+     @NotBlank
+     String name,
+     String description,
+     Long authorId,
+     Long executorId,
+     @NotNull
+     Long taskStatusId,
+     @Nullable
+     Set<Long> labelIds) {
+    public static TaskDTO toTaskDTO(Task task) {
+        return new TaskDTO(
+            task.getId(),
+            task.getName(),
+            task.getDescription(),
+            task.getAuthor().getId(),
+            task.getExecutor().getId(),
+            task.getTaskStatus().getId(),
+            null
+        );
+    }
 }

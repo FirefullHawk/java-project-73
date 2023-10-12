@@ -47,8 +47,4 @@ public class TaskStatus {
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "taskStatus")
     private List<Task> tasks;
-
-    public TaskStatus(final Long id) {
-        this.id = id;
-    }
 }

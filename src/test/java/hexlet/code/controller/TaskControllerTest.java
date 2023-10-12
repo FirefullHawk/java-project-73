@@ -85,10 +85,10 @@ public final class TaskControllerTest {
                 .andExpect(status().isCreated())
                 .andReturn().getResponse();
 
-        final Task task = fromJson(response.getContentAsString(), new TypeReference<>() { });
+        final TaskDTO task = fromJson(response.getContentAsString(), new TypeReference<>() { });
 
-        assertThat(taskRepository.getReferenceById(task.getId())).isNotNull();
-        assertThat(expectedTask.getName()).isEqualTo(task.getName());
+        assertThat(taskRepository.getReferenceById(task.id())).isNotNull();
+        assertThat(expectedTask.name()).isEqualTo(task.name());
     }
 
     @Test
@@ -105,10 +105,10 @@ public final class TaskControllerTest {
                 .andReturn()
                 .getResponse();
 
-        final Task task = fromJson(response.getContentAsString(), new TypeReference<>() { });
+        final TaskDTO task = fromJson(response.getContentAsString(), new TypeReference<>() { });
 
-        assertThat(expectedTask.getId()).isEqualTo(task.getId());
-        assertThat(expectedTask.getName()).isEqualTo(task.getName());
+        assertThat(expectedTask.getId()).isEqualTo(task.id());
+        assertThat(expectedTask.getName()).isEqualTo(task.name());
     }
 
     @Test
@@ -123,14 +123,14 @@ public final class TaskControllerTest {
                 .andReturn()
                 .getResponse();
 
-        final List<Task> tasks = fromJson(response.getContentAsString(), new TypeReference<>() { });
+        final List<TaskDTO> tasks = fromJson(response.getContentAsString(), new TypeReference<>() { });
         final List<Task> expected = taskRepository.findAll();
 
         int i = 0;
         for (var task : tasks) {
             assertThat(i < expected.size());
-            assertEquals(task.getId(), expected.get(i).getId());
-            assertEquals(task.getName(), expected.get(i).getName());
+            assertEquals(task.id(), expected.get(i).getId());
+            assertEquals(task.name(), expected.get(i).getName());
             i++;
         }
     }
@@ -146,24 +146,23 @@ public final class TaskControllerTest {
         final Long taskId = defaultTask.getId();
         final String oldTaskName = defaultTask.getName();
 
-        taskDto.setName("Updated task title");
-        taskDto.setDescription("Updated task description");
+        final TaskDTO taskDtoUpdate = buildTaskDTO("Updated task title", "Updated task description");
 
         var response = utils.performAuthorizedRequest(
                         put(NamedRoutes.taskPath(taskId))
-                                .content(asJson(taskDto))
+                                .content(asJson(taskDtoUpdate))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
 
-        final Task updatedTask = fromJson(response.getContentAsString(), new TypeReference<>() { });
-        final String updatedTaskName = updatedTask.getName();
+        final TaskDTO updatedTask = fromJson(response.getContentAsString(), new TypeReference<>() { });
+        final String updatedTaskName = updatedTask.name();
 
         assertThat(taskRepository.existsById(taskId)).isTrue();
         assertThat(taskRepository.findById(taskId).get().getName()).isNotEqualTo(oldTaskName);
         assertThat(taskRepository.findById(taskId).get().getName()).isEqualTo(updatedTaskName);
-        assertThat(taskRepository.findById(taskId).get().getDescription()).isEqualTo(updatedTask.getDescription());
+        assertThat(taskRepository.findById(taskId).get().getDescription()).isEqualTo(updatedTask.description());
 
     }
 
@@ -205,12 +204,29 @@ public final class TaskControllerTest {
         TaskStatus defaultStatus = taskStatusRepository.findAll().stream().filter(Objects::nonNull).findFirst().get();
         Label defaultLabel = labelRepository.findAll().stream().filter(Objects::nonNull).findFirst().get();
         return  new TaskDTO(
+                null,
                 "task",
                 "task_description",
                 defaultUser.getId(),
                 defaultUser.getId(),
                 defaultStatus.getId(),
                 Set.of(defaultLabel.getId())
+        );
+    }
+
+    private TaskDTO buildTaskDTO(String name, String description) {
+
+        User defaultUser = userRepository.findAll().stream().filter(Objects::nonNull).findFirst().get();
+        TaskStatus defaultStatus = taskStatusRepository.findAll().stream().filter(Objects::nonNull).findFirst().get();
+        Label defaultLabel = labelRepository.findAll().stream().filter(Objects::nonNull).findFirst().get();
+        return  new TaskDTO(
+            null,
+            name,
+            description,
+            defaultUser.getId(),
+            defaultUser.getId(),
+            defaultStatus.getId(),
+            Set.of(defaultLabel.getId())
         );
     }
 

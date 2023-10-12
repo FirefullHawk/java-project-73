@@ -2,7 +2,7 @@ package hexlet.code.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import hexlet.code.config.TestConfig;
-import hexlet.code.dto.update.LabelUpdateDTO;
+import hexlet.code.dto.LabelDTO;
 import hexlet.code.model.Label;
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.utils.NamedRoutes;
@@ -26,6 +26,7 @@ import static hexlet.code.utils.TestUtils.fromJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -59,7 +60,7 @@ public final class LabelControllerTest {
     @Test
     public void createLabel() throws Exception {
 
-        final LabelUpdateDTO expectedLabel = new LabelUpdateDTO("New label");
+        final LabelDTO expectedLabel = new LabelDTO(null, "New label", null);
 
         final var response = utils.performAuthorizedRequest(
                         post(NamedRoutes.labelsPath())
@@ -71,7 +72,7 @@ public final class LabelControllerTest {
         final Label label = fromJson(response.getContentAsString(), new TypeReference<>() { });
 
         assertThat(labelRepository.getReferenceById(label.getId())).isNotNull();
-        assertThat(label.getName()).isEqualTo(expectedLabel.getName());
+        assertThat(label.getName()).isEqualTo(expectedLabel.name());
     }
 
     @Test
@@ -94,7 +95,7 @@ public final class LabelControllerTest {
     @Test
     public void getAllLabels() throws Exception {
 
-        final LabelUpdateDTO newLabel = new LabelUpdateDTO("New label");
+        final LabelDTO newLabel = new LabelDTO(null, "New label", null);
         utils.regNewInstance(NamedRoutes.labelsPath(), newLabel);
 
         final var response = utils.performAuthorizedRequest(
@@ -108,7 +109,7 @@ public final class LabelControllerTest {
 
         int i = 0;
         for (var label : labels) {
-            assertThat(i < expected.size());
+            assertTrue(i < expected.size());
             assertEquals(label.getId(), expected.get(i).getId());
             assertEquals(label.getName(), expected.get(i).getName());
             i++;
@@ -122,7 +123,7 @@ public final class LabelControllerTest {
         final Long labelId = defaultLabel.getId();
         final String oldLabelName = defaultLabel.getName();
 
-        final LabelUpdateDTO newLabel = new LabelUpdateDTO("Updated label");
+        final LabelDTO newLabel = new LabelDTO(null, "Updated label", null);
 
         final var response = utils.performAuthorizedRequest(
                         put(NamedRoutes.labelPath(labelId))

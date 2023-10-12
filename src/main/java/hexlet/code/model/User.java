@@ -59,8 +59,4 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "executor")
     private List<Task> listTaskExecutor;
-
-    public User(final Long id) {
-        this.id = id;
-    }
 }
