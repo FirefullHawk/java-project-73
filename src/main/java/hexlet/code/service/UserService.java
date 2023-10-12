@@ -1,7 +1,7 @@
 package hexlet.code.service;
 
+import hexlet.code.dto.required.UserRequiredDTO;
 import hexlet.code.model.User;
-import hexlet.code.dto.UserDTO;
 import hexlet.code.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,13 +29,13 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User createUser(UserDTO userDto) {
+    public User createUser(UserRequiredDTO userDto) {
         final User user = new User();
 
         return userRepository.save(merge(user, userDto));
     }
 
-    public User updateUser(final long id, final UserDTO userDto) {
+    public User updateUser(final long id, final UserRequiredDTO userDto) {
         final User userToUpdate = userRepository.findById(id).get();
 
         return userRepository.save(merge(userToUpdate, userDto));
@@ -53,11 +53,11 @@ public class UserService {
         return userRepository.findByEmail(getCurrentUserId()).get();
     }
 
-    private User merge(User user, UserDTO userDto) {
-        user.setEmail(userDto.email());
-        user.setFirstName(userDto.firstName());
-        user.setLastName(userDto.lastName());
-        user.setPassword(passwordEncoder.encode(userDto.password()));
+    private User merge(User user, UserRequiredDTO userDto) {
+        user.setEmail(userDto.getEmail());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
         return user;
     }

@@ -8,12 +8,12 @@ import org.springframework.lang.Nullable;
 import java.util.Set;
 
 public record TaskDTO(@Nullable Long id,
-     @NotBlank
+     @NotBlank(message = "Name is required")
      String name,
      String description,
      Long authorId,
      Long executorId,
-     @NotNull
+     @NotNull(message = "Status is required")
      Long taskStatusId,
      @Nullable
      Set<Long> labelIds) {

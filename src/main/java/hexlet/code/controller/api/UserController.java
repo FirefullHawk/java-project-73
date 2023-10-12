@@ -1,6 +1,7 @@
 package hexlet.code.controller.api;
 
 import hexlet.code.dto.UserDTO;
+import hexlet.code.dto.required.UserRequiredDTO;
 import hexlet.code.model.User;
 import hexlet.code.service.UserService;
 import hexlet.code.utils.NamedRoutes;
@@ -46,7 +47,7 @@ public class UserController {
     })
     @PostMapping
     @ResponseStatus(CREATED)
-    UserDTO createUser(@Valid @RequestBody UserDTO userDto) {
+    UserDTO createUser(@Valid @RequestBody UserRequiredDTO userDto) {
         return UserDTO.toUserDTO(userService.createUser(userDto));
     }
 
@@ -83,7 +84,7 @@ public class UserController {
         @ApiResponse(responseCode = "422", description = "User data is incorrect")
     })
     @PutMapping(path = "/{id}")
-    UserDTO updateUser(@RequestBody @Valid UserDTO dto,
+    UserDTO updateUser(@RequestBody @Valid UserRequiredDTO dto,
                                       @PathVariable long id) {
         User updatedUser = userService.updateUser(id, dto);
         return UserDTO.toUserDTO(updatedUser);

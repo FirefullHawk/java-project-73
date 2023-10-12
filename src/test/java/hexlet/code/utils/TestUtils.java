@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.component.JWTHelper;
 import hexlet.code.dto.LabelDTO;
 import hexlet.code.dto.TaskStatusDTO;
-import hexlet.code.dto.UserDTO;
+import hexlet.code.dto.required.UserRequiredDTO;
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.TaskRepository;
@@ -30,12 +30,10 @@ public final class TestUtils {
     public static final String TEST_EMAIL_2 = "ududu@dud.com";
     public static final String LOGIN = "/login";
 
-    private final UserDTO defaultUser = new UserDTO(
-            null,
-            TEST_EMAIL_1,
+    private final UserRequiredDTO defaultUser = new UserRequiredDTO(
+        TEST_EMAIL_1,
             "John",
             "Dou",
-            null,
         "12345");
 
     private final TaskStatusDTO defaultStatus = new TaskStatusDTO(null, "Test Status", null);
