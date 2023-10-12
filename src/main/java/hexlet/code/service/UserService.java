@@ -54,10 +54,10 @@ public class UserService {
     }
 
     private User merge(User user, UserRequiredDTO userDto) {
-        user.setEmail(userDto.getEmail());
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setEmail(userDto.email());
+        user.setFirstName(userDto.firstName());
+        user.setLastName(userDto.lastName());
+        user.setPassword(passwordEncoder.encode(userDto.password()));
 
         return user;
     }

@@ -12,17 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @AllArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
-    private final LabelService labelService;
     private final StatusService taskStatusService;
     private final UserService userService;
 
@@ -60,21 +57,14 @@ public class TaskService {
 
     private Task buildTask(TaskDTO taskDto) {
         final User author = userService.getCurrentUser();
-        final User executor = Optional.ofNullable(taskDto.executorId())
-                .map(userService::getUserById)
-                .orElse(null);
+        final User executor = taskDto.executor();
 
         final TaskStatus status = Optional.ofNullable(taskDto.taskStatusId())
                 .map(taskStatusService::getStatus)
                 .orElse(null);
 
 
-        final Set<Label> labels = Optional.ofNullable(taskDto.labelIds())
-                .orElse(Set.of())
-                .stream()
-                .filter(Objects::nonNull)
-                .map(labelService::getLabelById)
-                .collect(Collectors.toSet());
+        final Set<Label> labels = taskDto.labels();
 
         return Task.builder()
                 .author(author)

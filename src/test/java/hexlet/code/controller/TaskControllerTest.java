@@ -207,10 +207,10 @@ public final class TaskControllerTest {
                 null,
                 "task",
                 "task_description",
-                defaultUser.getId(),
-                defaultUser.getId(),
+                defaultUser,
+                defaultUser,
                 defaultStatus.getId(),
-                Set.of(defaultLabel.getId())
+                Set.of(defaultLabel)
         );
     }
 
@@ -223,10 +223,10 @@ public final class TaskControllerTest {
             null,
             name,
             description,
-            defaultUser.getId(),
-            defaultUser.getId(),
+            defaultUser,
+            defaultUser,
             defaultStatus.getId(),
-            Set.of(defaultLabel.getId())
+            Set.of(defaultLabel)
         );
     }
 
