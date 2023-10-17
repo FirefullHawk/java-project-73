@@ -14,7 +14,7 @@ import TaskFilter from './TaskFilter.jsx';
 import { actions as taskActions, selectors as tasksSelectors } from '../../slices/tasksSlice.js';
 
 import { selectors as userSelectors } from '../../slices/usersSlice.js';
-import { selectors as taskStatuseSelectors } from '../../slices/taskStatusesSlice.js';
+import { selectors as taskStatusesSelectors } from '../../slices/taskStatusesSlice.js';
 
 const Tasks = () => {
   const { t } = useTranslation();
@@ -27,7 +27,7 @@ const Tasks = () => {
 
   const { executors, taskStatuses, tasks } = useSelector((state) => ({
     executors: userSelectors.selectAll(state),
-    taskStatuses: taskStatuseSelectors.selectAll(state),
+    taskStatuses: taskStatusesSelectors.selectAll(state),
     tasks: tasksSelectors.selectAll(state),
   }));
 

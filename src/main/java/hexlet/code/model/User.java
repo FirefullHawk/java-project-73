@@ -51,12 +51,12 @@ public class User {
     private Date createdAt;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY,
+    @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "author")
     private List<Task> listTaskAuthor;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY,
+    @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "executor")
     private List<Task> listTaskExecutor;
 }

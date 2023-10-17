@@ -8,6 +8,7 @@ import hexlet.code.model.Task;
 import hexlet.code.model.User;
 import hexlet.code.repository.TaskRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +37,8 @@ public class TaskService {
     }
 
     public List<Task> getAllTasks(Predicate predicate) {
-        return (List<Task>) taskRepository.findAll(predicate);
+        return predicate == null ? taskRepository.findAllByOrderByIdAsc()
+                         : taskRepository.findAll(predicate, Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public Task updateTask(TaskRequiredDTO taskDto, Long id) {

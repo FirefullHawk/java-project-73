@@ -44,7 +44,7 @@ public class TaskStatus {
     private Date createdAt;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY,
+    @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "taskStatus")
     private List<Task> tasks;
 }
