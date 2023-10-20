@@ -29,3 +29,10 @@ Before you can build this project, you must install and configure the following 
 * Gradle 8.3
 * Node.js 16.13.1
 * Makefile
+
+## Start application:
+Build application
+> make build
+
+Run application on localhost (default port - 8001)
+> make start
